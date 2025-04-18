@@ -8,7 +8,12 @@ export default function Home() {
   return (
     <div>
       <button
-        className="bg-blue-500 text-white p-2 rounded-md"
+        style={{
+          backgroundColor: "blue",
+          color: "white",
+          padding: "14px",
+          borderRadius: "4px",
+        }}
         onClick={() => {
           console.log("Record Start");
           try {
@@ -24,7 +29,7 @@ export default function Home() {
       >
         Record Start
       </button>
-      <div className="flex flex-col gap-2">
+      <div style={{ display: "flex", gap: "4px" }}>
         {volumes.map((volume, index) => (
           <div key={index}>{volume}</div>
         ))}
