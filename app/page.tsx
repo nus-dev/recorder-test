@@ -4,20 +4,34 @@ import { Dispatch, SetStateAction, useState } from "react";
 
 export default function Home() {
   const [volumes, setVolumes] = useState<number[]>([]);
+  const [errors, setErrors] = useState<string[]>([]);
   return (
     <div>
       <button
         className="bg-blue-500 text-white p-2 rounded-md"
         onClick={() => {
           console.log("Record Start");
-          recordStart(setVolumes);
+          try {
+            recordStart(setVolumes);
+          } catch (error) {
+            if (error instanceof Error) {
+              setErrors((prev) => [...prev, error.message]);
+            } else {
+              setErrors((prev) => [...prev, `Unknown error ${error}`]);
+            }
+          }
         }}
       >
         Record Start
       </button>
-      <div>
+      <div className="flex flex-col gap-2">
         {volumes.map((volume, index) => (
           <div key={index}>{volume}</div>
+        ))}
+      </div>
+      <div>
+        {errors.map((error, index) => (
+          <div key={index}>{error}</div>
         ))}
       </div>
     </div>
@@ -32,8 +46,16 @@ async function recordStart(setVolumes: Dispatch<SetStateAction<number[]>>) {
     systemAudio: "include",
   } as MediaStreamConstraints);
 
+  const audioTracks = stream.getAudioTracks();
+  if (audioTracks.length === 0) {
+    alert("No audio tracks found");
+    stream.getTracks().forEach((track) => track.stop());
+    return;
+  }
+
   const mediaRecorder = new MediaRecorder(stream);
   const audioContext = new AudioContext();
+
   const source = audioContext.createMediaStreamSource(stream);
   const analyser = audioContext.createAnalyser();
   analyser.fftSize = 256;
