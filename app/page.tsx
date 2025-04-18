@@ -19,11 +19,7 @@ export default function Home() {
           try {
             recordStart(setVolumes);
           } catch (error) {
-            if (error instanceof Error) {
-              setErrors((prev) => [...prev, error.message]);
-            } else {
-              setErrors((prev) => [...prev, `Unknown error ${error}`]);
-            }
+            setErrors((prev) => [...prev, `${error}`]);
           }
         }}
       >
