@@ -14,10 +14,10 @@ export default function Home() {
           padding: "14px",
           borderRadius: "4px",
         }}
-        onClick={() => {
+        onClick={async () => {
           console.log("Record Start");
           try {
-            recordStart(setVolumes);
+            await recordStart(setVolumes);
           } catch (error) {
             setErrors((prev) => [...prev, `${error}`]);
           }
